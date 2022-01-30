@@ -2,8 +2,8 @@ const inquirer = require('inquirer');
 const Choice = require('inquirer/lib/objects/choice');
 const Choices = require('inquirer/lib/objects/choices');
 const Prompt = require('inquirer/lib/prompts/base');
-// const fs = require('fs');
-// const generatePage = require('./src/page-template');
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 
 // const pageHTML = generatePage(name, github);
 
@@ -43,9 +43,16 @@ const promptUser = () => {
       }
     },
     {
+      type: 'confirm',
+      name: 'confirmAbout',
+      message: 'would you like to create a aboue me?',
+      default: true
+    },
+    {
       type: 'input',
       name: 'about',
-      message: 'Provide some information about yourself:'
+      message: 'Provide some information about yourself:',
+      when: ({ confirmAbout }) => confirmAbout
     }
   ]);
 };
@@ -53,15 +60,17 @@ const promptUser = () => {
 
 const promptProject = portfolioData => {
 
-  if (!portfolioData.projects) {
-    portfolioData.projects = []
-  }
-
   console.log(`
 =================
 Add a New Project
 =================
 `);
+
+  // IF THERE'S NO PROJECTS, CREATE ONE
+  if (!portfolioData.projects) {
+    portfolioData.projects = []
+  }
+
   return inquirer.prompt([
     {
       type: 'input',
@@ -121,14 +130,29 @@ Add a New Project
       default: false
     }
 
-  ]);
+  ])
+
+    .then(projectData => {
+      portfolioData.projects.push(projectData);
+      if (projectData.confirmAddProject) {
+        return promptProject(portfolioData);
+      } else {
+        return portfolioData;
+      }
+
+    });
 };
 
 
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
+    const pageHTML = generatePage(portfolioData);
+
+    // fs.writeFileSync('./index.html', pageHTML, err => {
+    //   if (err) throw new Error(err);
+    //   console.log('Page created! Check out index.html in this directory to see it!');
+    // });
   });
 
 // inquirer.prompt()
