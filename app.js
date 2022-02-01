@@ -3,15 +3,7 @@ const Choice = require('inquirer/lib/objects/choice');
 const Choices = require('inquirer/lib/objects/choices');
 const Prompt = require('inquirer/lib/prompts/base');
 const fs = require('fs');
-const generatePage = require('./src/page-template');
-
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//   if (err) throw err;
-
-//   console.log('Portfolio complete! Check out index.html to see the output!');
-// });
+const generatePage = require('./src/page-template.js');
 
 //FUNCTION FOR 'NAME,MESSGE' QUESTIONS
 const promptUser = () => {
@@ -131,37 +123,21 @@ Add a New Project
     }
 
   ])
-
-  // .then(projectData => {
-  //   portfolioData.projects.push(projectData);
-  //   if (projectData.confirmAddProject) {
-  //     return promptProject(portfolioData);
-  //   } else {
-  //     return portfolioData;
-  //   }
-
-  // });
 };
 
-// inquirer.prompt()
-//   .then(projectData => {
-//     portfolioData.projects.push(projectData);
-//     if (projectData.confirmAddProject) {
-//       return promptProject(portfolioData);
-//     } else {
-//       return portfolioData;
-//     }
-//   });
+// const pageHTML = generatePage(mockData);
 
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
     const pageHTML = generatePage(portfolioData);
 
-    // fs.writeFile('./index.html', pageHTML, err => {
-    //   if (err) throw new Error(err);
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
 
-    //   console.log('Page created! Check out index.html in this directory to see it!');
-    // });
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
   });
+
+
 
