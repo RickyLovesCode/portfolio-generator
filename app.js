@@ -5,14 +5,6 @@ const Prompt = require('inquirer/lib/prompts/base');
 const fs = require('fs');
 const generatePage = require('./src/page-template');
 
-// const pageHTML = generatePage(name, github);
-
-// fs.writeFile('./index.html', pageHTML, err => {
-//   if (err) throw err;
-
-//   console.log('Portfolio complete! Check out index.html to see the output!');
-// });
-
 //FUNCTION FOR 'NAME,MESSGE' QUESTIONS
 const promptUser = () => {
   return inquirer.prompt([
@@ -60,16 +52,17 @@ const promptUser = () => {
 
 const promptProject = portfolioData => {
 
+  // IF THERE'S NO PROJECTS, CREATE ONE
+  if (!portfolioData.projects) {
+    portfolioData.projects = []
+  }
+
+
   console.log(`
 =================
 Add a New Project
 =================
 `);
-
-  // IF THERE'S NO PROJECTS, CREATE ONE
-  if (!portfolioData.projects) {
-    portfolioData.projects = []
-  }
 
   return inquirer.prompt([
     {
@@ -132,35 +125,28 @@ Add a New Project
 
   ])
 
-    .then(projectData => {
+    .then((projectData) => {
       portfolioData.projects.push(projectData);
       if (projectData.confirmAddProject) {
         return promptProject(portfolioData);
       } else {
         return portfolioData;
       }
-
     });
 };
-
+// const pageHTML = generatePage(mockData);
 
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
     const pageHTML = generatePage(portfolioData);
 
-    // fs.writeFileSync('./index.html', pageHTML, err => {
-    //   if (err) throw new Error(err);
-    //   console.log('Page created! Check out index.html in this directory to see it!');
-    // });
+    fs.writeFile('./index.html', pageHTML, err => {
+      if (err) throw new Error(err);
+
+      console.log('Page created! Check out index.html in this directory to see it!');
+    });
   });
 
-// inquirer.prompt()
-//   .then(projectData => {
-//     portfolioData.projects.push(projectData);
-//     if (projectData.confirmAddProject) {
-//       return promptProject(portfolioData);
-//     } else {
-//       return portfolioData;
-//     }
-//   });
+
+
