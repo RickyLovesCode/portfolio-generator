@@ -3,7 +3,7 @@ const Choice = require('inquirer/lib/objects/choice');
 const Choices = require('inquirer/lib/objects/choices');
 const Prompt = require('inquirer/lib/prompts/base');
 const fs = require('fs');
-const generatePage = require('./src/page-template.js');
+const generatePage = require('./src/page-template');
 
 //FUNCTION FOR 'NAME,MESSGE' QUESTIONS
 const promptUser = () => {
@@ -52,16 +52,17 @@ const promptUser = () => {
 
 const promptProject = portfolioData => {
 
+  // IF THERE'S NO PROJECTS, CREATE ONE
+  if (!portfolioData.projects) {
+    portfolioData.projects = []
+  }
+
+
   console.log(`
 =================
 Add a New Project
 =================
 `);
-
-  // IF THERE'S NO PROJECTS, CREATE ONE
-  if (!portfolioData.projects) {
-    portfolioData.projects = []
-  }
 
   return inquirer.prompt([
     {
@@ -123,8 +124,16 @@ Add a New Project
     }
 
   ])
-};
 
+    .then((projectData) => {
+      portfolioData.projects.push(projectData);
+      if (projectData.confirmAddProject) {
+        return promptProject(portfolioData);
+      } else {
+        return portfolioData;
+      }
+    });
+};
 // const pageHTML = generatePage(mockData);
 
 promptUser()
