@@ -3,7 +3,7 @@ const fs = require('fs');
 const { resolve } = require('path');
 
 const writeFile = fileContent => {
-    return new promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         fs.writeFile('./dist/index.html', fileContent, err => {
             //IF ERR SEND PROMISE TO '.catch()' METHOD
             if (err) {
@@ -22,13 +22,19 @@ const writeFile = fileContent => {
 };
 
 
-//DEMO HTML CODE
-const sampleHtml = '<h1>This is an example</h1>';
+const copyFile = () => {
+    return new Promise((resolve, reject) => {
+        fs.copyFile('./src/style.css', './dist/style.css', err => {
+            if (err) {
+                reject(err);
+                return;
+            }
 
-writeFile(sampleHtml)
-    .then(successfulResponse => {
-        console.log(successfulResponse);
-    })
-    .catch(errorResponse => {
-        console.log(errorResponse);
+            resolve({
+                ok: true,
+                message: 'Stylesheet Created!'
+            });
+        });
     });
+}
+module.exports = { writeFile, copyFile }

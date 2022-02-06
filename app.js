@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const Choice = require('inquirer/lib/objects/choice');
 const Choices = require('inquirer/lib/objects/choices');
 const Prompt = require('inquirer/lib/prompts/base');
-const fs = require('fs');
+// const fs = require('fs');
+const { writeFile, copyFile } = require('./utils/generate-site');
 const generatePage = require('./src/page-template');
 
 //FUNCTION FOR 'NAME,MESSGE' QUESTIONS
@@ -154,29 +155,5 @@ promptUser()
   .catch(err => {
     console.log(err);
   });
-
-
-// promptUser()
-//   .then(promptProject)
-//   .then(portfolioData => {
-//     const pageHTML = generatePage(portfolioData);
-
-//     fs.writeFile('./dist/index.html', pageHTML, err => {
-//       if (err) {
-//         console.log(error);
-//         return;
-//       }
-//       console.log('Page created! Check out index.html in this directory to see it!');
-
-//       fs.copyFile('./src/style.css', './dist/style.css', err => {
-//         if (err) {
-//           console.log(error);
-//           return;
-//         }
-//         console.log('Style sheet copied!')
-//       })
-//     });
-//   });
-
 
 
